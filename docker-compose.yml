@@ -1,0 +1,26 @@
+version: "3.7"
+services:
+  go-rest-api:
+    build:
+      context: ./go-rest-api
+      dockerfile: Dockerfile
+    image: go-rest-api:latest
+    ports:
+      - "8080:8080"
+
+  simple-http:
+    build:
+      context: ./simple-http
+      dockerfile: Dockerfile
+    image: simple-http:latest
+    depends_on: 
+      - redis
+      - go-rest-api
+    environment: 
+      - REDIS_URL=redis
+      - API_JSON=go-rest-api
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+      
